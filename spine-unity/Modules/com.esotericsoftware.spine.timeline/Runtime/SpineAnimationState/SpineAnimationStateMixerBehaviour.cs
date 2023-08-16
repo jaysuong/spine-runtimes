@@ -237,10 +237,10 @@ namespace Spine.Unity.Playables {
 			if (numStartingClips > 0) {
 				if (skeletonAnimation) {
 					skeletonAnimation.Update(0);
-					skeletonAnimation.LateUpdate();
+					skeletonAnimation.RunLateUpdate();
 				} else if (skeletonGraphic) {
 					skeletonGraphic.Update(0);
-					skeletonGraphic.LateUpdate();
+					skeletonGraphic.RunLateUpdate();
 				}
 			}
 			startingClips[0] = startingClips[1] = ScriptPlayable<SpineAnimationStateBehaviour>.Null;
@@ -351,10 +351,10 @@ namespace Spine.Unity.Playables {
 				skeleton.UpdateWorldTransform();
 				if (skeletonAnimation) {
 					skeletonAnimation.AfterAnimationApplied();
-					skeletonAnimation.LateUpdate();
+					skeletonAnimation.RunLateUpdate();
 				} else if (skeletonGraphic) {
 					skeletonGraphic.AfterAnimationApplied();
-					skeletonGraphic.LateUpdate();
+					skeletonGraphic.RunLateUpdate();
 				}
 			}
 			// Do nothing outside of the first clip and the last clip.

@@ -447,7 +447,7 @@ namespace Spine.Unity.Editor {
 					wasInitParameterChanged = false;
 					if (!Application.isPlaying) {
 						skeletonRenderer.Initialize(true);
-						skeletonRenderer.LateUpdate();
+						skeletonRenderer.RunLateUpdate();
 						requireRepaint = true;
 					}
 				}
@@ -612,7 +612,7 @@ namespace Spine.Unity.Editor {
 				else if (skeletonRenderer is SkeletonMecanim)
 					((SkeletonMecanim)skeletonRenderer).Update();
 
-				skeletonRenderer.LateUpdate();
+				skeletonRenderer.RunLateUpdate();
 				return true;
 			}
 			return false;

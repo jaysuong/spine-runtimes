@@ -130,7 +130,7 @@ namespace Spine.Unity.Editor {
 
 					skeletonRenderer = selectedSkeletonRenderer;
 					skeletonRenderer.Initialize(false);
-					skeletonRenderer.LateUpdate();
+					skeletonRenderer.RunLateUpdate();
 					skeleton = skeletonRenderer.skeleton;
 #if NEW_PREFAB_SYSTEM
 					isPrefab = false;
@@ -544,7 +544,7 @@ namespace Spine.Unity.Editor {
 			}
 
 			if (requireRepaint) {
-				skeletonRenderer.LateUpdate();
+				skeletonRenderer.RunLateUpdate();
 				Repaint();
 				SceneView.RepaintAll();
 			}

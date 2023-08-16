@@ -65,10 +65,10 @@ namespace Spine.Unity.Editor {
 			if (skeleton == null) {
 				if (skeletonRenderer != null) {
 					skeletonRenderer.Initialize(false);
-					skeletonRenderer.LateUpdate();
+					skeletonRenderer.RunLateUpdate();
 				} else if (skeletonGraphic != null) {
 					skeletonGraphic.Initialize(false);
-					skeletonGraphic.LateUpdate();
+					skeletonGraphic.RunLateUpdate();
 				}
 				skeleton = skeletonUtility.Skeleton;
 			}
