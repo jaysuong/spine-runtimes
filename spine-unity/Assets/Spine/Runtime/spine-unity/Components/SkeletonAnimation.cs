@@ -362,7 +362,7 @@ namespace Spine.Unity
 				previousUpdateMode != UpdateMode.EverythingExceptMesh)
 				Update(0);
 			if (previousUpdateMode != UpdateMode.FullUpdate)
-				LateUpdate();
+				RunLateUpdate();
 		}
 	}
 

@@ -357,7 +357,7 @@ namespace Spine.Unity
 		{
 #if UNITY_EDITOR
 			if (!Application.isPlaying)
-				LateUpdate();
+				RunLateUpdate();
 #endif
 		}
 
