@@ -11,7 +11,7 @@ namespace Spine.Unity
     public class SpineAnimatorUpdater : MonoBehaviour
     {
 
-        private static List<ISkeletonUpdate>[] UpdateLists = new List<ISkeletonUpdate> {
+        private static List<ISkeletonUpdate>[] UpdateLists = new List<ISkeletonUpdate>[] {
             new List<ISkeletonUpdate>(16),
             new List<ISkeletonUpdate>(16)
         };
