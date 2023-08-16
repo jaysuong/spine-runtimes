@@ -233,11 +233,11 @@ namespace Spine.Unity
 			switch (updateTiming)
 			{
 				case UpdateTiming.InUpdate:
-					SpineAnimatorUpdater.RegisterUpdate(this);
+					SkeletonAnimationUpdater.RegisterUpdate(this);
 					break;
 
 				case UpdateTiming.InFixedUpdate:
-					SpineAnimatorUpdater.RegisterFixedUpdate(this);
+					SkeletonAnimationUpdater.RegisterFixedUpdate(this);
 					break;
 			}
 		}
@@ -249,11 +249,11 @@ namespace Spine.Unity
 			switch (updateTiming)
 			{
 				case UpdateTiming.InUpdate:
-					SpineAnimatorUpdater.UnregisterUpdate(this);
+					SkeletonAnimationUpdater.UnregisterUpdate(this);
 					break;
 
 				case UpdateTiming.InFixedUpdate:
-					SpineAnimatorUpdater.UnregisterFixedUpdate(this);
+					SkeletonAnimationUpdater.UnregisterFixedUpdate(this);
 					break;
 			}
 		}
