@@ -258,23 +258,25 @@ namespace Spine.Unity
 			}
 		}
 
-		virtual protected void Update()
-		{
-#if UNITY_EDITOR
-			if (!Application.isPlaying) {
-				Update(0f);
-				return;
-			}
-#endif
-			if (updateTiming != UpdateTiming.InUpdate) return;
-			Update(unscaledTime ? Time.unscaledDeltaTime : Time.deltaTime);
-		}
+		/*
+				virtual protected void Update()
+				{
+		#if UNITY_EDITOR
+					if (!Application.isPlaying) {
+						Update(0f);
+						return;
+					}
+		#endif
+					if (updateTiming != UpdateTiming.InUpdate) return;
+					Update(unscaledTime ? Time.unscaledDeltaTime : Time.deltaTime);
+				}
 
-		virtual protected void FixedUpdate()
-		{
-			if (updateTiming != UpdateTiming.InFixedUpdate) return;
-			Update(unscaledTime ? Time.unscaledDeltaTime : Time.deltaTime);
-		}
+				virtual protected void FixedUpdate()
+				{
+					if (updateTiming != UpdateTiming.InFixedUpdate) return;
+					Update(unscaledTime ? Time.unscaledDeltaTime : Time.deltaTime);
+				}
+				*/
 
 
 		public void Update(in float unscaledDT, in float scaledDT)
