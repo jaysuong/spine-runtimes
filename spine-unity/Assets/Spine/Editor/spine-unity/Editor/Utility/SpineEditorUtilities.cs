@@ -321,7 +321,7 @@ namespace Spine.Unity.Editor {
 			if (component == null) return;
 			if (!SkeletonDataAssetIsValid(component.SkeletonDataAsset)) return;
 			component.Initialize(true);
-			component.RunLateUpdate();
+			component.LateUpdate();
 		}
 
 		public static bool SkeletonDataAssetIsValid (SkeletonDataAsset asset) {

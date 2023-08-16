@@ -240,7 +240,7 @@ namespace Spine.Unity.Playables {
 					skeletonAnimation.RunLateUpdate();
 				} else if (skeletonGraphic) {
 					skeletonGraphic.Update(0);
-					skeletonGraphic.RunLateUpdate();
+					skeletonGraphic.LateUpdate();
 				}
 			}
 			startingClips[0] = startingClips[1] = ScriptPlayable<SpineAnimationStateBehaviour>.Null;
@@ -354,7 +354,7 @@ namespace Spine.Unity.Playables {
 					skeletonAnimation.RunLateUpdate();
 				} else if (skeletonGraphic) {
 					skeletonGraphic.AfterAnimationApplied();
-					skeletonGraphic.RunLateUpdate();
+					skeletonGraphic.LateUpdate();
 				}
 			}
 			// Do nothing outside of the first clip and the last clip.
