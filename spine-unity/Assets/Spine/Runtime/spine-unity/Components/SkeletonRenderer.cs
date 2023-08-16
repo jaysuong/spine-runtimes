@@ -56,7 +56,8 @@ using UnityEngine;
 using UnityEditor.SceneManagement;
 #endif
 
-namespace Spine.Unity {
+namespace Spine.Unity
+{
 	/// <summary>Base class of animated Spine skeleton components. This component manages and renders a skeleton.</summary>
 #if NEW_PREFAB_SYSTEM
 	[ExecuteAlways]
@@ -65,7 +66,8 @@ namespace Spine.Unity {
 #endif
 	[RequireComponent(typeof(MeshRenderer)), DisallowMultipleComponent]
 	[HelpURL("http://esotericsoftware.com/spine-unity#SkeletonRenderer-Component")]
-	public class SkeletonRenderer : MonoBehaviour, ISkeletonComponent, IHasSkeletonDataAsset {
+	public class SkeletonRenderer : MonoBehaviour, ISkeletonComponent, IHasSkeletonDataAsset
+	{
 		public SkeletonDataAsset skeletonDataAsset;
 
 		#region Initialization settings
@@ -141,7 +143,7 @@ namespace Spine.Unity {
 
 		// Submesh Separation
 		/// <summary>Slot names used to populate separatorSlots list when the Skeleton is initialized. Changing this after initialization does nothing.</summary>
-		[UnityEngine.Serialization.FormerlySerializedAs("submeshSeparators")] [SerializeField] [SpineSlot] protected string[] separatorSlotNames = new string[0];
+		[UnityEngine.Serialization.FormerlySerializedAs("submeshSeparators")][SerializeField][SpineSlot] protected string[] separatorSlotNames = new string[0];
 
 		/// <summary>Slots that determine where the render is split. This is used by components such as SkeletonRenderSeparator so that the skeleton can be rendered by two separate renderers on different GameObjects.</summary>
 		[System.NonSerialized] public readonly List<Slot> separatorSlots = new List<Slot>();
@@ -227,22 +229,27 @@ namespace Spine.Unity {
 #if SPINE_OPTIONAL_RENDEROVERRIDE
 		// These are API for anything that wants to take over rendering for a SkeletonRenderer.
 		public bool disableRenderingOnOverride = true;
-		public delegate void InstructionDelegate (SkeletonRendererInstruction instruction);
+		public delegate void InstructionDelegate(SkeletonRendererInstruction instruction);
 		event InstructionDelegate generateMeshOverride;
 
 		/// <summary>Allows separate code to take over rendering for this SkeletonRenderer component. The subscriber is passed a SkeletonRendererInstruction argument to determine how to render a skeleton.</summary>
-		public event InstructionDelegate GenerateMeshOverride {
-			add {
+		public event InstructionDelegate GenerateMeshOverride
+		{
+			add
+			{
 				generateMeshOverride += value;
-				if (disableRenderingOnOverride && generateMeshOverride != null) {
+				if (disableRenderingOnOverride && generateMeshOverride != null)
+				{
 					Initialize(false);
 					if (meshRenderer)
 						meshRenderer.enabled = false;
 				}
 			}
-			remove {
+			remove
+			{
 				generateMeshOverride -= value;
-				if (disableRenderingOnOverride && generateMeshOverride == null) {
+				if (disableRenderingOnOverride && generateMeshOverride == null)
+				{
 					Initialize(false);
 					if (meshRenderer)
 						meshRenderer.enabled = true;
@@ -279,15 +286,17 @@ namespace Spine.Unity {
 		#region Skeleton
 		[System.NonSerialized] public bool valid;
 		[System.NonSerialized] public Skeleton skeleton;
-		public Skeleton Skeleton {
-			get {
+		public Skeleton Skeleton
+		{
+			get
+			{
 				Initialize(false);
 				return skeleton;
 			}
 		}
 		#endregion
 
-		public delegate void SkeletonRendererDelegate (SkeletonRenderer skeletonRenderer);
+		public delegate void SkeletonRendererDelegate(SkeletonRenderer skeletonRenderer);
 
 		/// <summary>OnRebuild is raised after the Skeleton is successfully initialized.</summary>
 		public event SkeletonRendererDelegate OnRebuild;
@@ -299,15 +308,18 @@ namespace Spine.Unity {
 		public SkeletonDataAsset SkeletonDataAsset { get { return skeletonDataAsset; } } // ISkeletonComponent
 
 		#region Runtime Instantiation
-		public static T NewSpineGameObject<T> (SkeletonDataAsset skeletonDataAsset, bool quiet = false) where T : SkeletonRenderer {
+		public static T NewSpineGameObject<T>(SkeletonDataAsset skeletonDataAsset, bool quiet = false) where T : SkeletonRenderer
+		{
 			return SkeletonRenderer.AddSpineComponent<T>(new GameObject("New Spine GameObject"), skeletonDataAsset, quiet);
 		}
 
 		/// <summary>Add and prepare a Spine component that derives from SkeletonRenderer to a GameObject at runtime.</summary>
 		/// <typeparam name="T">T should be SkeletonRenderer or any of its derived classes.</typeparam>
-		public static T AddSpineComponent<T> (GameObject gameObject, SkeletonDataAsset skeletonDataAsset, bool quiet = false) where T : SkeletonRenderer {
+		public static T AddSpineComponent<T>(GameObject gameObject, SkeletonDataAsset skeletonDataAsset, bool quiet = false) where T : SkeletonRenderer
+		{
 			T c = gameObject.AddComponent<T>();
-			if (skeletonDataAsset != null) {
+			if (skeletonDataAsset != null)
+			{
 				c.skeletonDataAsset = skeletonDataAsset;
 				c.Initialize(false, quiet);
 			}
@@ -315,7 +327,8 @@ namespace Spine.Unity {
 		}
 
 		/// <summary>Applies MeshGenerator settings to the SkeletonRenderer and its internal MeshGenerator.</summary>
-		public void SetMeshSettings (MeshGenerator.Settings settings) {
+		public void SetMeshSettings(MeshGenerator.Settings settings)
+		{
 			this.calculateTangents = settings.calculateTangents;
 			this.immutableTriangles = settings.immutableTriangles;
 			this.pmaVertexColors = settings.pmaVertexColors;
@@ -328,7 +341,8 @@ namespace Spine.Unity {
 		#endregion
 
 
-		public virtual void Awake () {
+		public virtual void Awake()
+		{
 			Initialize(false);
 			updateMode = updateWhenInvisible;
 		}
@@ -339,26 +353,30 @@ namespace Spine.Unity {
 		}
 #endif
 
+		protected virtual void OnEnable()
+		{
 #if UNITY_EDITOR
-		void OnEnable () {
 			if (!Application.isPlaying)
 				LateUpdate();
-		}
 #endif
+		}
 
-		void OnDisable () {
+		protected virtual void OnDisable()
+		{
 			if (clearStateOnDisable && valid)
 				ClearState();
 		}
 
-		void OnDestroy () {
+		void OnDestroy()
+		{
 			rendererBuffers.Dispose();
 			valid = false;
 		}
 
 		/// <summary>
 		/// Clears the previously generated mesh and resets the skeleton's pose.</summary>
-		public virtual void ClearState () {
+		public virtual void ClearState()
+		{
 			MeshFilter meshFilter = GetComponent<MeshFilter>();
 			if (meshFilter != null) meshFilter.sharedMesh = null;
 			currentInstructions.Clear();
@@ -368,14 +386,16 @@ namespace Spine.Unity {
 		/// <summary>
 		/// Sets a minimum buffer size for the internal MeshGenerator to prevent excess allocations during animation.
 		/// </summary>
-		public void EnsureMeshGeneratorCapacity (int minimumVertexCount) {
+		public void EnsureMeshGeneratorCapacity(int minimumVertexCount)
+		{
 			meshGenerator.EnsureVertexCapacity(minimumVertexCount);
 		}
 
 		/// <summary>
 		/// Initialize this component. Attempts to load the SkeletonData and creates the internal Skeleton object and buffers.</summary>
 		/// <param name="overwrite">If set to <c>true</c>, it will overwrite internal objects if they were already generated. Otherwise, the initialized component will ignore subsequent calls to initialize.</param>
-		public virtual void Initialize (bool overwrite, bool quiet = false) {
+		public virtual void Initialize(bool overwrite, bool quiet = false)
+		{
 			if (valid && !overwrite)
 				return;
 #if UNITY_EDITOR
@@ -407,7 +427,8 @@ namespace Spine.Unity {
 			meshRenderer = GetComponent<MeshRenderer>();
 			rendererBuffers.Initialize();
 
-			skeleton = new Skeleton(skeletonData) {
+			skeleton = new Skeleton(skeletonData)
+			{
 				ScaleX = initialFlipX ? -1 : 1,
 				ScaleY = initialFlipY ? -1 : 1
 			};
@@ -440,7 +461,8 @@ namespace Spine.Unity {
 
 		/// <summary>
 		/// Generates a new UnityEngine.Mesh from the internal Skeleton.</summary>
-		public virtual void LateUpdate () {
+		public virtual void LateUpdate()
+		{
 			if (!valid) return;
 
 #if UNITY_EDITOR && NEW_PREFAB_SYSTEM
@@ -458,7 +480,8 @@ namespace Spine.Unity {
 			LateUpdateMesh();
 		}
 
-		public virtual void LateUpdateMesh () {
+		public virtual void LateUpdateMesh()
+		{
 #if SPINE_OPTIONAL_RENDEROVERRIDE
 			bool doMeshOverride = generateMeshOverride != null;
 			if ((!meshRenderer || !meshRenderer.enabled) && !doMeshOverride) return;
@@ -472,7 +495,8 @@ namespace Spine.Unity {
 
 			bool updateTriangles;
 
-			if (this.singleSubmesh) {
+			if (this.singleSubmesh)
+			{
 				// STEP 1. Determine a SmartMesh.Instruction. Split up instructions into submeshes. =============================================
 				MeshGenerator.GenerateSingleSubmeshInstruction(currentInstructions, skeleton, skeletonDataAsset.atlasAssets[0].PrimaryMaterial);
 
@@ -483,7 +507,8 @@ namespace Spine.Unity {
 #endif
 
 				// STEP 2. Update vertex buffer based on verts from the attachments. ===========================================================
-				meshGenerator.settings = new MeshGenerator.Settings {
+				meshGenerator.settings = new MeshGenerator.Settings
+				{
 					pmaVertexColors = this.pmaVertexColors,
 					zSpacing = this.zSpacing,
 					useClipping = this.useClipping,
@@ -493,13 +518,18 @@ namespace Spine.Unity {
 				};
 				meshGenerator.Begin();
 				updateTriangles = SkeletonRendererInstruction.GeometryNotEqual(currentInstructions, currentSmartMesh.instructionUsed);
-				if (currentInstructions.hasActiveClipping) {
+				if (currentInstructions.hasActiveClipping)
+				{
 					meshGenerator.AddSubmesh(workingSubmeshInstructions.Items[0], updateTriangles);
-				} else {
+				}
+				else
+				{
 					meshGenerator.BuildMeshWithArrays(currentInstructions, updateTriangles);
 				}
 
-			} else {
+			}
+			else
+			{
 				// STEP 1. Determine a SmartMesh.Instruction. Split up instructions into submeshes. =============================================
 				MeshGenerator.GenerateSkeletonRendererInstruction(currentInstructions, skeleton, customSlotMaterials, separatorSlots, doMeshOverride, this.immutableTriangles);
 
@@ -510,7 +540,8 @@ namespace Spine.Unity {
 #endif
 
 #if SPINE_OPTIONAL_RENDEROVERRIDE
-				if (doMeshOverride) {
+				if (doMeshOverride)
+				{
 					this.generateMeshOverride(currentInstructions);
 					if (disableRenderingOnOverride) return;
 				}
@@ -519,7 +550,8 @@ namespace Spine.Unity {
 				updateTriangles = SkeletonRendererInstruction.GeometryNotEqual(currentInstructions, currentSmartMesh.instructionUsed);
 
 				// STEP 2. Update vertex buffer based on verts from the attachments. ===========================================================
-				meshGenerator.settings = new MeshGenerator.Settings {
+				meshGenerator.settings = new MeshGenerator.Settings
+				{
 					pmaVertexColors = this.pmaVertexColors,
 					zSpacing = this.zSpacing,
 					useClipping = this.useClipping,
@@ -543,13 +575,17 @@ namespace Spine.Unity {
 			rendererBuffers.UpdateSharedMaterials(workingSubmeshInstructions);
 
 			bool materialsChanged = rendererBuffers.MaterialsChangedInLastUpdate();
-			if (updateTriangles) { // Check if the triangles should also be updated.
+			if (updateTriangles)
+			{ // Check if the triangles should also be updated.
 				meshGenerator.FillTriangles(currentMesh);
 				meshRenderer.sharedMaterials = rendererBuffers.GetUpdatedSharedMaterialsArray();
-			} else if (materialsChanged) {
+			}
+			else if (materialsChanged)
+			{
 				meshRenderer.sharedMaterials = rendererBuffers.GetUpdatedSharedMaterialsArray();
 			}
-			if (materialsChanged && (this.maskMaterials.AnyMaterialCreated)) {
+			if (materialsChanged && (this.maskMaterials.AnyMaterialCreated))
+			{
 				this.maskMaterials = new SpriteMaskInteractionMaterials();
 			}
 
@@ -576,7 +612,8 @@ namespace Spine.Unity {
 				OnMeshAndMaterialsUpdated(this);
 		}
 
-		public virtual void OnBecameVisible () {
+		public virtual void OnBecameVisible()
+		{
 			UpdateMode previousUpdateMode = updateMode;
 			updateMode = UpdateMode.FullUpdate;
 
@@ -585,11 +622,13 @@ namespace Spine.Unity {
 				LateUpdate();
 		}
 
-		public void OnBecameInvisible () {
+		public void OnBecameInvisible()
+		{
 			updateMode = updateWhenInvisible;
 		}
 
-		public void FindAndApplySeparatorSlots (string startsWith, bool clearExistingSeparators = true, bool updateStringArray = false) {
+		public void FindAndApplySeparatorSlots(string startsWith, bool clearExistingSeparators = true, bool updateStringArray = false)
+		{
 			if (string.IsNullOrEmpty(startsWith)) return;
 
 			FindAndApplySeparatorSlots(
@@ -599,7 +638,8 @@ namespace Spine.Unity {
 				);
 		}
 
-		public void FindAndApplySeparatorSlots (System.Func<string, bool> slotNamePredicate, bool clearExistingSeparators = true, bool updateStringArray = false) {
+		public void FindAndApplySeparatorSlots(System.Func<string, bool> slotNamePredicate, bool clearExistingSeparators = true, bool updateStringArray = false)
+		{
 			if (slotNamePredicate == null) return;
 			if (!valid) return;
 
@@ -607,19 +647,23 @@ namespace Spine.Unity {
 				separatorSlots.Clear();
 
 			ExposedList<Slot> slots = skeleton.Slots;
-			foreach (Slot slot in slots) {
+			foreach (Slot slot in slots)
+			{
 				if (slotNamePredicate.Invoke(slot.Data.Name))
 					separatorSlots.Add(slot);
 			}
 
-			if (updateStringArray) {
+			if (updateStringArray)
+			{
 				List<string> detectedSeparatorNames = new List<string>();
-				foreach (Slot slot in skeleton.Slots) {
+				foreach (Slot slot in skeleton.Slots)
+				{
 					string slotName = slot.Data.Name;
 					if (slotNamePredicate.Invoke(slotName))
 						detectedSeparatorNames.Add(slotName);
 				}
-				if (!clearExistingSeparators) {
+				if (!clearExistingSeparators)
+				{
 					string[] originalNames = this.separatorSlotNames;
 					foreach (string originalName in originalNames)
 						detectedSeparatorNames.Add(originalName);
@@ -630,14 +674,17 @@ namespace Spine.Unity {
 
 		}
 
-		public void ReapplySeparatorSlotNames () {
+		public void ReapplySeparatorSlotNames()
+		{
 			if (!valid)
 				return;
 
 			separatorSlots.Clear();
-			for (int i = 0, n = separatorSlotNames.Length; i < n; i++) {
+			for (int i = 0, n = separatorSlotNames.Length; i < n; i++)
+			{
 				Slot slot = skeleton.FindSlot(separatorSlotNames[i]);
-				if (slot != null) {
+				if (slot != null)
+				{
 					separatorSlots.Add(slot);
 				}
 #if UNITY_EDITOR

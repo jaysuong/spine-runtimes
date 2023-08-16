@@ -33,7 +33,8 @@
 
 using UnityEngine;
 
-namespace Spine.Unity {
+namespace Spine.Unity
+{
 
 #if NEW_PREFAB_SYSTEM
 	[ExecuteAlways]
@@ -42,7 +43,8 @@ namespace Spine.Unity {
 #endif
 	[AddComponentMenu("Spine/SkeletonAnimation")]
 	[HelpURL("http://esotericsoftware.com/spine-unity#SkeletonAnimation-Component")]
-	public class SkeletonAnimation : SkeletonRenderer, ISkeletonAnimation, IAnimationStateComponent {
+	public class SkeletonAnimation : SkeletonRenderer, ISkeletonAnimation, IAnimationStateComponent, ISkeletonUpdate
+	{
 
 		#region IAnimationStateComponent
 		/// <summary>
@@ -52,8 +54,10 @@ namespace Spine.Unity {
 		/// <summary>
 		/// This is the Spine.AnimationState object of this SkeletonAnimation. You can control animations through it.
 		/// Note that this object, like .skeleton, is not guaranteed to exist in Awake. Do all accesses and caching to it in Start</summary>
-		public Spine.AnimationState AnimationState {
-			get {
+		public Spine.AnimationState AnimationState
+		{
+			get
+			{
 				Initialize(false);
 				return this.state;
 			}
@@ -114,27 +118,37 @@ namespace Spine.Unity {
 		/// <summary>
 		/// Setting this property sets the animation of the skeleton. If invalid, it will store the animation name for the next time the skeleton is properly initialized.
 		/// Getting this property gets the name of the currently playing animation. If invalid, it will return the last stored animation name set through this property.</summary>
-		public string AnimationName {
-			get {
-				if (!valid) {
+		public string AnimationName
+		{
+			get
+			{
+				if (!valid)
+				{
 					return _animationName;
-				} else {
+				}
+				else
+				{
 					TrackEntry entry = state.GetCurrent(0);
 					return entry == null ? null : entry.Animation.Name;
 				}
 			}
-			set {
+			set
+			{
 				Initialize(false);
-				if (_animationName == value) {
+				if (_animationName == value)
+				{
 					TrackEntry entry = state.GetCurrent(0);
 					if (entry != null && entry.Loop == loop)
 						return;
 				}
 				_animationName = value;
 
-				if (string.IsNullOrEmpty(value)) {
+				if (string.IsNullOrEmpty(value))
+				{
 					state.ClearTrack(0);
-				} else {
+				}
+				else
+				{
 					Spine.Animation animationObject = skeletonDataAsset.GetSkeletonData(false).FindAnimation(value);
 					if (animationObject != null)
 						state.SetAnimation(0, animationObject, loop);
@@ -154,22 +168,25 @@ namespace Spine.Unity {
 		#region Runtime Instantiation
 		/// <summary>Adds and prepares a SkeletonAnimation component to a GameObject at runtime.</summary>
 		/// <returns>The newly instantiated SkeletonAnimation</returns>
-		public static SkeletonAnimation AddToGameObject (GameObject gameObject, SkeletonDataAsset skeletonDataAsset,
-			bool quiet = false) {
+		public static SkeletonAnimation AddToGameObject(GameObject gameObject, SkeletonDataAsset skeletonDataAsset,
+			bool quiet = false)
+		{
 			return SkeletonRenderer.AddSpineComponent<SkeletonAnimation>(gameObject, skeletonDataAsset, quiet);
 		}
 
 		/// <summary>Instantiates a new UnityEngine.GameObject and adds a prepared SkeletonAnimation component to it.</summary>
 		/// <returns>The newly instantiated SkeletonAnimation component.</returns>
-		public static SkeletonAnimation NewSkeletonAnimationGameObject (SkeletonDataAsset skeletonDataAsset,
-			bool quiet = false) {
+		public static SkeletonAnimation NewSkeletonAnimationGameObject(SkeletonDataAsset skeletonDataAsset,
+			bool quiet = false)
+		{
 			return SkeletonRenderer.NewSpineGameObject<SkeletonAnimation>(skeletonDataAsset, quiet);
 		}
 		#endregion
 
 		/// <summary>
 		/// Clears the previously generated mesh, resets the skeleton's pose, and clears all previously active animations.</summary>
-		public override void ClearState () {
+		public override void ClearState()
+		{
 			base.ClearState();
 			if (state != null) state.ClearTracks();
 		}
@@ -177,7 +194,8 @@ namespace Spine.Unity {
 		/// <summary>
 		/// Initialize this component. Attempts to load the SkeletonData and creates the internal Spine objects and buffers.</summary>
 		/// <param name="overwrite">If set to <c>true</c>, force overwrite an already initialized object.</param>
-		public override void Initialize (bool overwrite, bool quiet = false) {
+		public override void Initialize(bool overwrite, bool quiet = false)
+		{
 			if (valid && !overwrite)
 				return;
 #if UNITY_EDITOR
@@ -191,9 +209,11 @@ namespace Spine.Unity {
 			state = new Spine.AnimationState(skeletonDataAsset.GetAnimationStateData());
 			wasUpdatedAfterInit = false;
 
-			if (!string.IsNullOrEmpty(_animationName)) {
+			if (!string.IsNullOrEmpty(_animationName))
+			{
 				Spine.Animation animationObject = skeletonDataAsset.GetSkeletonData(false).FindAnimation(_animationName);
-				if (animationObject != null) {
+				if (animationObject != null)
+				{
 					state.SetAnimation(0, animationObject, loop);
 #if UNITY_EDITOR
 					if (!Application.isPlaying)
@@ -206,7 +226,40 @@ namespace Spine.Unity {
 				_OnAnimationRebuild(this);
 		}
 
-		virtual protected void Update () {
+		protected override void OnEnable()
+		{
+			base.OnEnable();
+
+			switch (updateTiming)
+			{
+				case UpdateTiming.InUpdate:
+					SpineAnimatorUpdater.RegisterUpdate(this);
+					break;
+
+				case UpdateTiming.InFixedUpdate:
+					SpineAnimatorUpdater.RegisterFixedUpdate(this);
+					break;
+			}
+		}
+
+		protected override void OnDisable()
+		{
+			base.OnDisable();
+
+			switch (updateTiming)
+			{
+				case UpdateTiming.InUpdate:
+					SpineAnimatorUpdater.UnregisterUpdate(this);
+					break;
+
+				case UpdateTiming.InFixedUpdate:
+					SpineAnimatorUpdater.UnregisterFixedUpdate(this);
+					break;
+			}
+		}
+
+		virtual protected void Update()
+		{
 #if UNITY_EDITOR
 			if (!Application.isPlaying) {
 				Update(0f);
@@ -217,13 +270,21 @@ namespace Spine.Unity {
 			Update(unscaledTime ? Time.unscaledDeltaTime : Time.deltaTime);
 		}
 
-		virtual protected void FixedUpdate () {
+		virtual protected void FixedUpdate()
+		{
 			if (updateTiming != UpdateTiming.InFixedUpdate) return;
 			Update(unscaledTime ? Time.unscaledDeltaTime : Time.deltaTime);
 		}
 
+
+		public void Update(in float unscaledDeltaTime, in float scaledDeltaTime)
+		{
+			Update(unscaledTime ? unscaledTime : scaledDeltaTime);
+		}
+
 		/// <summary>Progresses the AnimationState according to the given deltaTime, and applies it to the Skeleton. Use Time.deltaTime to update manually. Use deltaTime 0 to update without progressing the time.</summary>
-		public void Update (float deltaTime) {
+		public void Update(float deltaTime)
+		{
 			if (!valid || state == null)
 				return;
 
@@ -232,19 +293,22 @@ namespace Spine.Unity {
 				return;
 			UpdateAnimationStatus(deltaTime);
 
-			if (updateMode == UpdateMode.OnlyAnimationStatus) {
+			if (updateMode == UpdateMode.OnlyAnimationStatus)
+			{
 				state.ApplyEventTimelinesOnly(skeleton, issueEvents: false);
 				return;
 			}
 			ApplyAnimation();
 		}
 
-		protected void UpdateAnimationStatus (float deltaTime) {
+		protected void UpdateAnimationStatus(float deltaTime)
+		{
 			deltaTime *= timeScale;
 			state.Update(deltaTime);
 		}
 
-		protected void ApplyAnimation () {
+		protected void ApplyAnimation()
+		{
 			if (_BeforeApply != null)
 				_BeforeApply(this);
 
@@ -256,29 +320,34 @@ namespace Spine.Unity {
 			AfterAnimationApplied();
 		}
 
-		public void AfterAnimationApplied () {
+		public void AfterAnimationApplied()
+		{
 			if (_UpdateLocal != null)
 				_UpdateLocal(this);
 
 			skeleton.UpdateWorldTransform();
 
-			if (_UpdateWorld != null) {
+			if (_UpdateWorld != null)
+			{
 				_UpdateWorld(this);
 				skeleton.UpdateWorldTransform();
 			}
 
-			if (_UpdateComplete != null) {
+			if (_UpdateComplete != null)
+			{
 				_UpdateComplete(this);
 			}
 		}
 
-		public override void LateUpdate () {
+		public override void LateUpdate()
+		{
 			// instantiation can happen from Update() after this component, leading to a missing Update() call.
 			if (!wasUpdatedAfterInit) Update(0);
 			base.LateUpdate();
 		}
 
-		public override void OnBecameVisible () {
+		public override void OnBecameVisible()
+		{
 			UpdateMode previousUpdateMode = updateMode;
 			updateMode = UpdateMode.FullUpdate;
 
