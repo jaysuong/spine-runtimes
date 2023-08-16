@@ -159,10 +159,10 @@ namespace Spine.Unity {
 			}
 		}
 
-		public override void LateUpdate () {
+		public void LateUpdate () {
 			// instantiation can happen from Update() after this component, leading to a missing Update() call.
 			if (!wasUpdatedAfterInit) Update();
-			base.LateUpdate();
+			RunLateUpdate();
 		}
 
 		public override void OnBecameVisible () {
