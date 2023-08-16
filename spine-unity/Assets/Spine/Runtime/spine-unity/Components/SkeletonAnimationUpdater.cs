@@ -5,7 +5,12 @@ namespace Spine.Unity
 {
     public interface ISkeletonUpdate
     {
-        public void Update(in float unscaledDeltaTime, in float deltaTime);
+        void Update(in float unscaledDeltaTime, in float deltaTime);
+    }
+
+    public interface ISkeletonLateUpdate
+    {
+        void RunLateUpdate();
     }
 
     public class SkeletonAnimationUpdater : MonoBehaviour
@@ -15,6 +20,8 @@ namespace Spine.Unity
             new List<ISkeletonUpdate>(16),
             new List<ISkeletonUpdate>(16)
         };
+
+        private static List<ISkeletonLateUpdate>[] LateUpdateLists = new List<ISkeletonLateUpdate>(16);
 
         private enum UpdateType { Update, FixedUpdate }
 
@@ -43,6 +50,14 @@ namespace Spine.Unity
             }
         }
 
+        private void LateUpdate()
+        {
+            for (var i = 0; i < LateUpdateLists.Count; ++i)
+            {
+                LateUpdateLists[i].RunLateUpdate();
+            }
+        }
+
         public static void RegisterUpdate(ISkeletonUpdate reference)
         {
             UpdateLists[(int)UpdateType.Update].Add(reference);
@@ -61,6 +76,16 @@ namespace Spine.Unity
         public static void UnregisterFixedUpdate(ISkeletonUpdate reference)
         {
             UpdateLists[(int)UpdateType.FixedUpdate].Remove(reference);
+        }
+
+        public static void RegisterLateUpdate(ISkeletonLateUpdate reference)
+        {
+            LateUpdateLists.Add(reference);
+        }
+
+        public static void UnRegisterLateUpdate(ISkeletonLateUpdate reference)
+        {
+            LateUpdateLists.Remove(reference);
         }
     }
 }

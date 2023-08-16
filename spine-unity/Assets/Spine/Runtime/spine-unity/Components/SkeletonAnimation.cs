@@ -43,7 +43,7 @@ namespace Spine.Unity
 #endif
 	[AddComponentMenu("Spine/SkeletonAnimation")]
 	[HelpURL("http://esotericsoftware.com/spine-unity#SkeletonAnimation-Component")]
-	public class SkeletonAnimation : SkeletonRenderer, ISkeletonAnimation, IAnimationStateComponent, ISkeletonUpdate
+	public class SkeletonAnimation : SkeletonRenderer, ISkeletonAnimation, IAnimationStateComponent, ISkeletonUpdate, ISkeletonLateUpdate
 	{
 
 		#region IAnimationStateComponent
@@ -240,6 +240,8 @@ namespace Spine.Unity
 					SkeletonAnimationUpdater.RegisterFixedUpdate(this);
 					break;
 			}
+
+			SkeletonAnimationUpdater.RegisterLateUpdate(this);
 		}
 
 		protected override void OnDisable()
@@ -256,6 +258,8 @@ namespace Spine.Unity
 					SkeletonAnimationUpdater.UnregisterFixedUpdate(this);
 					break;
 			}
+
+			SkeletonAnimationUpdater.UnRegisterLateUpdate(this);
 		}
 
 		/*

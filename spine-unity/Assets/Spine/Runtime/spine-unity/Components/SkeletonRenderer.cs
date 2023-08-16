@@ -444,7 +444,7 @@ namespace Spine.Unity
 			UpdateMode updateModeSaved = updateMode;
 			updateMode = UpdateMode.FullUpdate;
 			skeleton.UpdateWorldTransform();
-			LateUpdate();
+			RunLateUpdate();
 			updateMode = updateModeSaved;
 
 			if (OnRebuild != null)
@@ -461,7 +461,7 @@ namespace Spine.Unity
 
 		/// <summary>
 		/// Generates a new UnityEngine.Mesh from the internal Skeleton.</summary>
-		public virtual void LateUpdate()
+		public virtual void RunLateUpdate()
 		{
 			if (!valid) return;
 
@@ -619,7 +619,7 @@ namespace Spine.Unity
 
 			// OnBecameVisible is called after LateUpdate()
 			if (previousUpdateMode != UpdateMode.FullUpdate)
-				LateUpdate();
+				RunLateUpdate();
 		}
 
 		public void OnBecameInvisible()
