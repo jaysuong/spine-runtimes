@@ -21,7 +21,7 @@ namespace Spine.Unity
             new List<ISkeletonUpdate>(16)
         };
 
-        private static List<ISkeletonLateUpdate>[] LateUpdateLists = new List<ISkeletonLateUpdate>(16);
+        private static List<ISkeletonLateUpdate> LateUpdateLists = new List<ISkeletonLateUpdate>(16);
 
         private enum UpdateType { Update, FixedUpdate }
 
