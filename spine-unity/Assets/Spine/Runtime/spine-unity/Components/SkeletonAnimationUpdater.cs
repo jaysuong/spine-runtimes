@@ -8,7 +8,7 @@ namespace Spine.Unity
         public void Update(in float unscaledDeltaTime, in float deltaTime);
     }
 
-    public class SpineAnimatorUpdater : MonoBehaviour
+    public class SkeletonAnimationUpdater : MonoBehaviour
     {
 
         private static List<ISkeletonUpdate>[] UpdateLists = new List<ISkeletonUpdate>[] {
