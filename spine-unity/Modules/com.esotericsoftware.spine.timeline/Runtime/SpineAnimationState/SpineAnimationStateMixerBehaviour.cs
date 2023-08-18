@@ -236,7 +236,7 @@ namespace Spine.Unity.Playables {
 			}
 			if (numStartingClips > 0) {
 				if (skeletonAnimation) {
-					skeletonAnimation.Update(0);
+					skeletonAnimation.UpdateAnim(0);
 					skeletonAnimation.RunLateUpdate();
 				} else if (skeletonGraphic) {
 					skeletonGraphic.Update(0);
