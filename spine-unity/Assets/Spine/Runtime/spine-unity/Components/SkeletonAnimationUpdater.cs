@@ -5,7 +5,7 @@ namespace Spine.Unity
 {
     public interface ISkeletonUpdate
     {
-        void Update(in float unscaledDeltaTime, in float deltaTime);
+        void RunUpdate(in float unscaledDeltaTime, in float deltaTime);
     }
 
     public interface ISkeletonLateUpdate
@@ -34,7 +34,7 @@ namespace Spine.Unity
 
             for (var i = 0; i < list.Count; ++i)
             {
-                list[i].Update(unscaledDt, scaledDt);
+                list[i].RunUpdate(unscaledDt, scaledDt);
             }
         }
 
@@ -46,7 +46,7 @@ namespace Spine.Unity
 
             for (var i = 0; i < list.Count; ++i)
             {
-                list[i].Update(unscaledDt, scaledDt);
+                list[i].RunUpdate(unscaledDt, scaledDt);
             }
         }
 

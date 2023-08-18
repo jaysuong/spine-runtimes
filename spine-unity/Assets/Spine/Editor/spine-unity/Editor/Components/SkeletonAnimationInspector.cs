@@ -113,7 +113,7 @@ namespace Spine.Unity.Editor {
 						if (animationToUse != null) {
 							skeletonAnimation.AnimationState.SetAnimation(0, animationToUse, loop.boolValue);
 						}
-						skeletonAnimation.Update(0);
+						skeletonAnimation.UpdateAnim(0);
 						skeletonAnimation.RunLateUpdate();
 						requireRepaint = true;
 					} else {

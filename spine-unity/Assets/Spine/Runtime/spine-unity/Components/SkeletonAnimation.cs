@@ -217,7 +217,7 @@ namespace Spine.Unity
 					state.SetAnimation(0, animationObject, loop);
 #if UNITY_EDITOR
 					if (!Application.isPlaying)
-						Update(0f);
+						UpdateAnim(0f);
 #endif
 				}
 			}
@@ -283,13 +283,13 @@ namespace Spine.Unity
 				*/
 
 
-		public void Update(in float unscaledDT, in float scaledDT)
+		public void RunUpdate(in float unscaledDT, in float scaledDT)
 		{
-			Update(unscaledTime ? unscaledDT : scaledDT);
+			UpdateAnim(unscaledTime ? unscaledDT : scaledDT);
 		}
 
 		/// <summary>Progresses the AnimationState according to the given deltaTime, and applies it to the Skeleton. Use Time.deltaTime to update manually. Use deltaTime 0 to update without progressing the time.</summary>
-		public void Update(float deltaTime)
+		public void UpdateAnim(float deltaTime)
 		{
 			if (!valid || state == null)
 				return;
@@ -348,7 +348,7 @@ namespace Spine.Unity
 		public override void RunLateUpdate()
 		{
 			// instantiation can happen from Update() after this component, leading to a missing Update() call.
-			if (!wasUpdatedAfterInit) Update(0);
+			if (!wasUpdatedAfterInit) UpdateAnim(0);
 			base.RunLateUpdate();
 		}
 
@@ -360,7 +360,7 @@ namespace Spine.Unity
 			// OnBecameVisible is called after LateUpdate()
 			if (previousUpdateMode != UpdateMode.FullUpdate &&
 				previousUpdateMode != UpdateMode.EverythingExceptMesh)
-				Update(0);
+				UpdateAnim(0);
 			if (previousUpdateMode != UpdateMode.FullUpdate)
 				RunLateUpdate();
 		}
