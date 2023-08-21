@@ -30,6 +30,7 @@
 //#define USE_FAST_SIN_COS_ATAN2_APPROXIMATIONS
 
 using System;
+using System.Runtime.CompilerServices;
 
 namespace Spine {
 	public static class MathUtils {
@@ -96,34 +97,49 @@ namespace Spine {
 		}
 #else
 		/// <summary>Returns the sine of a given angle in radians.</summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		static public float Sin (float radians) {
 			return (float)Math.Sin(radians);
 		}
 
 		/// <summary>Returns the cosine of a given angle in radians.</summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		static public float Cos (float radians) {
 			return (float)Math.Cos(radians);
 		}
 
 		/// <summary>Returns the sine of a given angle in degrees.</summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		static public float SinDeg (float degrees) {
 			return (float)Math.Sin(degrees * DegRad);
 		}
 
 		/// <summary>Returns the cosine of a given angle in degrees.</summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		static public float CosDeg (float degrees) {
 			return (float)Math.Cos(degrees * DegRad);
 		}
 
 		/// <summary>Returns the atan2 using Math.Atan2.</summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		static public float Atan2 (float y, float x) {
 			return (float)Math.Atan2(y, x);
 		}
 #endif
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		static public float Max(float x, float y) {
+			return float.IsNaN(y) || x > y ? x : y;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		static public float Min(float x, float y) {
+			return float.IsNaN(y) || x < y ? x : y;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		static public float Clamp (float value, float min, float max) {
-			if (value < min) return min;
-			if (value > max) return max;
-			return value;
+			return Max(min, Min(max, value));
 		}
 
 		static public float RandomTriangle (float min, float max) {
