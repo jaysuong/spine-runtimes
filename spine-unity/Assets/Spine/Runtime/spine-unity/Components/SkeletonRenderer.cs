@@ -791,7 +791,8 @@ namespace Spine.Unity
 #endif //#if BUILT_IN_SPRITE_MASK_COMPONENT
 
 #if PER_MATERIAL_PROPERTY_BLOCKS
-		private MaterialPropertyBlock reusedPropertyBlock;
+		private MaterialPropertyBlock reusedPropertyBlock = new MaterialPropertyBlock();
+		private static List<Material> sharedMaterials = new List<Material>();
 		public static readonly int SUBMESH_DUMMY_PARAM_ID = Shader.PropertyToID("_Submesh");
 
 		/// <summary>
@@ -801,15 +802,16 @@ namespace Spine.Unity
 		/// "A1 B A2" are reordered to "A1A2 B", regardless of batching-related project settings.
 		/// </summary>
 		private void SetMaterialSettingsToFixDrawOrder () {
-			if (reusedPropertyBlock == null) reusedPropertyBlock = new MaterialPropertyBlock();
-
 			bool hasPerRendererBlock = meshRenderer.HasPropertyBlock();
 			if (hasPerRendererBlock) {
 				meshRenderer.GetPropertyBlock(reusedPropertyBlock);
 			}
 
-			for (int i = 0; i < meshRenderer.sharedMaterials.Length; ++i) {
-				if (!meshRenderer.sharedMaterials[i])
+			sharedMaterials.Clear();
+			meshRenderer.GetSharedMaterials(sharedMaterials);
+
+			for (int i = 0; i < sharedMaterials.Count; ++i) {
+				if (!sharedMaterials[i])
 					continue;
 
 				if (!hasPerRendererBlock) meshRenderer.GetPropertyBlock(reusedPropertyBlock, i);
@@ -818,7 +820,7 @@ namespace Spine.Unity
 				reusedPropertyBlock.SetFloat(SUBMESH_DUMMY_PARAM_ID, i);
 				meshRenderer.SetPropertyBlock(reusedPropertyBlock, i);
 
-				meshRenderer.sharedMaterials[i].enableInstancing = false;
+				sharedMaterials[i].enableInstancing = false;
 			}
 		}
 #endif
