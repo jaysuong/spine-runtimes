@@ -140,7 +140,7 @@ namespace Spine {
 		public EventData FindEvent (string eventDataName) {
 			if (eventDataName == null) throw new ArgumentNullException("eventDataName", "eventDataName cannot be null.");
 			foreach (EventData eventData in events)
-				if (eventData.name == eventDataName) return eventData;
+				if (eventData.name.Equals(eventDataName, StringComparison.Ordinal)) return eventData;
 			return null;
 		}
 
@@ -152,7 +152,7 @@ namespace Spine {
 			Animation[] animations = this.animations.Items;
 			for (int i = 0, n = this.animations.Count; i < n; i++) {
 				Animation animation = animations[i];
-				if (animation.name == animationName) return animation;
+				if (animation.name.Equals(animationName, StringComparison.Ordinal)) return animation;
 			}
 			return null;
 		}
