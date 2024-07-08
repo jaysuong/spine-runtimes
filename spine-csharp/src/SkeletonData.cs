@@ -195,7 +195,7 @@ namespace Spine {
 			PathConstraintData[] pathConstraints = this.pathConstraints.Items;
 			for (int i = 0, n = this.pathConstraints.Count; i < n; i++) {
 				PathConstraintData constraint = pathConstraints[i];
-				if (constraint.name.Equals(constraintName. StringComparison.Ordinal)) return constraint;
+				if (constraint.name.Equals(constraintName, StringComparison.Ordinal)) return constraint;
 			}
 			return null;
 		}
