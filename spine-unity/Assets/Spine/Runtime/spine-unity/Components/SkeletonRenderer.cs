@@ -603,14 +603,22 @@ namespace Spine.Unity
 #endif
 
 #if PER_MATERIAL_PROPERTY_BLOCKS
-			if (fixDrawOrder && meshRenderer.sharedMaterials.Length > 2) {
-				SetMaterialSettingsToFixDrawOrder();
+			if (fixDrawOrder) {
+				meshRenderer.GetSharedMaterials(sharedMaterialList);
+				if (sharedMaterialList.Count > 2) {
+					SetMaterialSettingsToFixDrawOrder();
+				}
 			}
 #endif
 
 			if (OnMeshAndMaterialsUpdated != null)
 				OnMeshAndMaterialsUpdated(this);
 		}
+
+#if PER_MATERIAL_PROPERTY_BLOCKS
+		// Shared material tests
+		private static List<Material> sharedMaterialList = new();
+#endif
 
 		public virtual void OnBecameVisible()
 		{
