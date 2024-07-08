@@ -106,7 +106,7 @@ namespace Spine {
 			BoneData[] bones = this.bones.Items;
 			for (int i = 0, n = this.bones.Count; i < n; i++) {
 				BoneData bone = bones[i];
-				if (bone.name == boneName) return bone;
+				if (bone.name.Equals(boneName, StringComparison.Ordinal)) return bone;
 			}
 			return null;
 		}
@@ -119,7 +119,7 @@ namespace Spine {
 			SlotData[] slots = this.slots.Items;
 			for (int i = 0, n = this.slots.Count; i < n; i++) {
 				SlotData slot = slots[i];
-				if (slot.name == slotName) return slot;
+				if (slot.name.Equals(slotName, StringComparison.Ordinal)) return slot;
 			}
 			return null;
 		}
@@ -130,7 +130,7 @@ namespace Spine {
 		public Skin FindSkin (string skinName) {
 			if (skinName == null) throw new ArgumentNullException("skinName", "skinName cannot be null.");
 			foreach (Skin skin in skins)
-				if (skin.name == skinName) return skin;
+				if (skin.name.Equals(skinName, StringComparison.Ordinal)) return skin;
 			return null;
 		}
 
@@ -165,7 +165,7 @@ namespace Spine {
 			IkConstraintData[] ikConstraints = this.ikConstraints.Items;
 			for (int i = 0, n = this.ikConstraints.Count; i < n; i++) {
 				IkConstraintData ikConstraint = ikConstraints[i];
-				if (ikConstraint.name == constraintName) return ikConstraint;
+				if (ikConstraint.name.Equals(constraintName, StringComparison.Ordinal)) return ikConstraint;
 			}
 			return null;
 		}
@@ -178,7 +178,7 @@ namespace Spine {
 			TransformConstraintData[] transformConstraints = this.transformConstraints.Items;
 			for (int i = 0, n = this.transformConstraints.Count; i < n; i++) {
 				TransformConstraintData transformConstraint = transformConstraints[i];
-				if (transformConstraint.name == constraintName) return transformConstraint;
+				if (transformConstraint.name.Equals(constraintName, StringComparison.Oridinal)) return transformConstraint;
 			}
 			return null;
 		}
@@ -195,7 +195,7 @@ namespace Spine {
 			PathConstraintData[] pathConstraints = this.pathConstraints.Items;
 			for (int i = 0, n = this.pathConstraints.Count; i < n; i++) {
 				PathConstraintData constraint = pathConstraints[i];
-				if (constraint.name.Equals(constraintName)) return constraint;
+				if (constraint.name.Equals(constraintName. StringComparison.Oridinal)) return constraint;
 			}
 			return null;
 		}
