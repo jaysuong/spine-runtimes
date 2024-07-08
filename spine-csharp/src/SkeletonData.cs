@@ -178,7 +178,7 @@ namespace Spine {
 			TransformConstraintData[] transformConstraints = this.transformConstraints.Items;
 			for (int i = 0, n = this.transformConstraints.Count; i < n; i++) {
 				TransformConstraintData transformConstraint = transformConstraints[i];
-				if (transformConstraint.name.Equals(constraintName, StringComparison.Oridinal)) return transformConstraint;
+				if (transformConstraint.name.Equals(constraintName, StringComparison.Ordinal)) return transformConstraint;
 			}
 			return null;
 		}
@@ -195,7 +195,7 @@ namespace Spine {
 			PathConstraintData[] pathConstraints = this.pathConstraints.Items;
 			for (int i = 0, n = this.pathConstraints.Count; i < n; i++) {
 				PathConstraintData constraint = pathConstraints[i];
-				if (constraint.name.Equals(constraintName. StringComparison.Oridinal)) return constraint;
+				if (constraint.name.Equals(constraintName. StringComparison.Ordinal)) return constraint;
 			}
 			return null;
 		}
