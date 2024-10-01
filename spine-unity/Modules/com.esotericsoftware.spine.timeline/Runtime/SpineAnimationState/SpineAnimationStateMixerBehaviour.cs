@@ -223,6 +223,7 @@ namespace Spine.Unity.Playables {
 						trackEntry.TrackTime = (float)clipPlayable.GetTime() * rootPlayableSpeed * clipSpeed;
 #endif
 						trackEntry.TimeScale = clipSpeed * rootPlayableSpeed;
+						trackEntry.Reverse = trackEntry.TimeScale < 0f;
 						trackEntry.AttachmentThreshold = clipData.attachmentThreshold;
 						trackEntry.HoldPrevious = clipData.holdPrevious;
 						trackEntry.Alpha = clipData.alpha;
